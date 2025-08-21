@@ -159,7 +159,7 @@
     const card = document.getElementById("weatherCard");
     const weatherData = { temp: null, desc: null }; // store for chatbot
 
-    const weatherApiKey = "540ded25858fec9c769460f5db14b956"; // OpenWeatherMap API key
+    const weatherApiKey = ""; // OpenWeatherMap API key
     function getEmoji(weather) {
       weather = weather.toLowerCase();
       if (weather.includes("cloud")) return "☁️";
@@ -222,7 +222,7 @@
     const chatInput = document.getElementById("chatInput");
     const sendBtn = document.getElementById("sendBtn");
 
-    const geminiApiKey = "AIzaSyCdbRE9bU8P3kGMRAfrYF7lPaYCpONY8h0"; // Gemini API Key
+    const geminiApiKey = ""; // Gemini API Key
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
 
     chatToggle.addEventListener("click", () => {
@@ -273,3 +273,4 @@
   </script>
 </body>
 </html>
+
