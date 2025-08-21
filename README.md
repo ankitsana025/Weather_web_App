@@ -24,28 +24,6 @@ A lightweight, responsive web application that shows real-time weather informati
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Get API Keys
-
-* **OpenWeatherMap**: Sign up and generate a free API key from [OpenWeatherMap](https://openweathermap.org/).
-* **Gemini**: Use the Gemini API key provided in your environment. If you have your own, replace the placeholder in the code.
-
-### 2. Add Your Keys
-
-In `index.html` (inside the `<script>` tag), update the following line:
-
-```js
-const API_KEY = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap key
-```
-
-### 3. Run the App
-
-* Open `index.html` in any modern browser.
-* Allow location access when prompted.
-
----
-
 ## 💡 How to Use
 
 1. The weather card loads automatically with the weather for your current location.
@@ -59,4 +37,4 @@ const API_KEY = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap key
 * **Weather Forecasts:** Display multi-day forecasts.
 * **City Search:** Option to search weather by city name.
 * **Settings Panel:** Toggle between Celsius and Fahrenheit.
-* **Smarter Chatbot:** Improved memory and context handling across conversations.
+* **Smarter Chatbed memory and context handling across conversations.
