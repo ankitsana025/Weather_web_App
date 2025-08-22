@@ -38,3 +38,8 @@ A lightweight, responsive web application that shows real-time weather informati
 * **City Search:** Option to search weather by city name.
 * **Settings Panel:** Toggle between Celsius and Fahrenheit.
 * **Smarter Chatbed memory and context handling across conversations.
+
+
+## Weather App Link
+https://test-5gut.onrender.com
+Still working on the chat-bot section
