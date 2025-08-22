@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -265,3 +266,281 @@ async function generateReply(message) {
 <script src="index.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App + Gemini Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(to bottom, #1e3c72, #2a5298);
+    }
+    .card {
+      background: #f9f9f9;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .card h2 {
+      margin: 10px 0;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+    .emoji {
+      font-size: 5rem;
+      margin: 15px 0;
+    }
+    .city {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .details p {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+
+    /* Chat Button */
+    .chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0078ff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+    .chat-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Chat Window */
+    .chat-window {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 320px;
+      max-height: 450px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: #0078ff;
+      color: white;
+      padding: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .chat-body {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .chat-message {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: 80%;
+      font-size: 0.9rem;
+    }
+    .user-message {
+      background: #0078ff;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+    .bot-message {
+      background: #eaeaea;
+      color: #333;
+      margin-right: auto;
+      text-align: left;
+    }
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+    .chat-footer input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+    .chat-footer button {
+      background: #0078ff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 500px) {
+      .chat-window {
+        width: 90%;
+        right: 5%;
+        bottom: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Weather Card -->
+  <div class="card" id="weatherCard">
+    <h2>Current Weather</h2>
+    <p>Fetching...</p>
+  </div>
+
+  <!-- Chatbot Button -->
+  <button class="chat-btn" id="chatToggle">💬</button>
+
+  <!-- Chatbot Window -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">AI Chatbot</div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type a message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // ========== WEATHER APP ==========
+    const card = document.getElementById("weatherCard");
+    const weatherData = { temp: null, desc: null }; // store for chatbot
+
+    const weatherApiKey = ""; // OpenWeatherMap API key
+    function getEmoji(weather) {
+      weather = weather.toLowerCase();
+      if (weather.includes("cloud")) return "☁️";
+      if (weather.includes("rain")) return "🌧️";
+      if (weather.includes("clear")) return "☀️";
+      if (weather.includes("snow")) return "❄️";
+      if (weather.includes("storm") || weather.includes("thunder")) return "⛈️";
+      if (weather.includes("mist") || weather.includes("fog")) return "🌫️";
+      if (weather.includes("drizzle")) return "🌦️";
+      return "🌍";
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${weatherApiKey}`;
+
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+
+          if (data.cod !== 200) {
+            card.innerHTML = `<h2>Error: ${data.message}</h2>`;
+            return;
+          }
+
+          const city = data.name;
+          const temp = data.main.temp;
+          const desc = data.weather[0].description;
+          const wind = data.wind.speed;
+          const humidity = data.main.humidity;
+
+          weatherData.temp = temp;
+          weatherData.desc = desc;
+
+          card.innerHTML = `
+            <h2>Current Weather</h2>
+            <div class="emoji">${getEmoji(desc)}</div>
+            <div class="city">${city}</div>
+            <div class="details">
+              <p>Temperature: ${temp} °C</p>
+              <p>Description: ${desc}</p>
+              <p>Humidity: ${humidity}%</p>
+              <p>Wind Speed: ${wind} m/s</p>
+            </div>
+          `;
+        } catch (err) {
+          card.innerHTML = "<h2>Failed to fetch weather</h2>";
+        }
+      });
+    } else {
+      card.innerHTML = "<h2>Geolocation not supported</h2>";
+    }
+
+    // ========== CHATBOT ==========
+    const chatToggle = document.getElementById("chatToggle");
+    const chatWindow = document.getElementById("chatWindow");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const geminiApiKey = ""; // Gemini API Key
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
+
+    chatToggle.addEventListener("click", () => {
+      chatWindow.style.display = chatWindow.style.display === "flex" ? "none" : "flex";
+    });
+
+    function addMessage(message, type) {
+      const div = document.createElement("div");
+      div.classList.add("chat-message", type === "user" ? "user-message" : "bot-message");
+      div.textContent = message;
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function callGeminiAPI(query) {
+      const text = `Based on the current temperature ${weatherData.temp}°C and condition ${weatherData.desc}, ${query}`;
+      const res = await fetch(geminiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text }] }]
+        })
+      });
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn’t generate a response.";
+    }
+
+    sendBtn.addEventListener("click", async () => {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      addMessage(msg, "user");
+      chatInput.value = "";
+
+      addMessage("Typing...", "bot");
+      const typingEl = chatBody.lastChild;
+
+      try {
+        const reply = await callGeminiAPI(msg);
+        typingEl.textContent = reply;
+      } catch (e) {
+        typingEl.textContent = "Error fetching AI response.";
+      }
+    });
+
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendBtn.click();
+    });
+  </script>
+</body>
+</html>
+
+>>>>>>> 8c4bdd038a933966b0d95e78be0d4fa5b43e341b
